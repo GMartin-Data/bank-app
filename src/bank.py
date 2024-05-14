@@ -41,9 +41,14 @@ class Account(Base):
 class Transaction(Base):
     __tablename__ = "transactions"
     # Fields
-    ...
+    transaction_id = Column(Integer, primary_key=True)
+    account_id = Column(Integer, ForeignKey("accounts.account_id"))
+    amount = Column(Float)
+    type = Column(String)
+    timestamp = Column(DateTime)
     # Relationships
     # Many-to-One: any transaction has only one account
+    account = relationship("Account", back_populates="transaction")
     pass
 
 
