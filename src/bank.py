@@ -25,10 +25,10 @@ def is_incorrect_amount(amount):
     try:
         float(amount)
     except ValueError:
-        print(f"/!\ TRANSACTION CANCELLED: Expected a numerical amount, got {amount}")
+        print(f"TRANSACTION CANCELLED: Expected a numerical amount, got {amount}")
         return True
     if amount < 0:
-        print(f"/!\ TRANSACTION CANCELLED: Expected a positive amount, got {amount}")
+        print(f"TRANSACTION CANCELLED: Expected a positive amount, got {amount}")
         return True
     return False
     
