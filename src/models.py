@@ -45,3 +45,10 @@ class Transaction(Base):
     account: Mapped[int] = relationship(
         back_populates="transaction"
     )
+
+    # Methods
+    def __init__(self, account_id, amount, type):
+        self.account_id = account_id
+        self.amount = amount
+        self.type = type
+        self.timestamp = datetime.now()
