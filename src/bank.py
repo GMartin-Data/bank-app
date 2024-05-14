@@ -35,3 +35,20 @@ class Transaction(Base):
     # Relationships
     # Many-to-One: any transaction has only one account
     pass
+
+
+# Functions
+def create_account():
+    pass
+
+def deposit():
+    pass
+
+def withdraw():
+    pass
+
+def transfer():
+    pass
+
+def get_balance():
+    pass
