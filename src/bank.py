@@ -13,6 +13,7 @@ This invoves two mandatory classes:
 
 from datetime import datetime
 
+from sqlalchemy.exc import NoResultFound
 from sqlalchemy.orm import Session
 
 from models_legacy import Account
@@ -26,8 +27,21 @@ def create_account(session: Session, amount: float = 0.0) -> None:
         session.add(new_account)
         session.commit()
 
-def deposit():
-    pass
+
+def deposit(session: Session, account_id: int, amount: float) -> None:
+    with session:
+        try:
+            account = (session
+                       .query(Account)
+                       .filter(Account.account_id == account_id)
+                       .one())
+            account.balance += amount
+            session.add(account)
+            get_balance(session, account_id)
+            session.commit()
+        except NoResultFound:
+            print(f"There's no account with id {account_id}")
+
 
 def withdraw():
     pass
@@ -38,17 +52,23 @@ def transfer(account_id_from, account_id_to, amount):
     # with session:
     pass
 
-def get_balance(session: Session, account_id: int) -> None:
+def get_balance(session: Session, account_id: int) -> bool:
     with session:
-        account = (session
-                   .query(Account)
-                   .filter(Account.account_id == account_id)
-                   .one())
-        print(f"Account {account.account_id} has a balance of {account.balance}")
+        try:
+            account = (session
+                       .query(Account)
+                       .filter(Account.account_id == account_id)
+                       .one())
+            print(f"Account {account.account_id} has a balance of {account.balance}")
+        except NoResultFound:
+            print(f"There's no account with id {account_id}")
     
 
 
 if __name__ == "__main__":
     engine, session = init_db_connection()
-    get_balance(session, 1)
+    # create_account(session, amount=0)
+    get_balance(session, account_id=2)
+    # deposit(session, account_id=1, amount=10)
+    # deposit(session, account_id=2, amount=100)
     engine.dispose()
