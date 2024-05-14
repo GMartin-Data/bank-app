@@ -18,9 +18,3 @@ def init_db_connection(connection_string):
     # You will have to close all with `engine.dispose()`.
     engine = create_engine(connection_string, echo=True)
     return engine, Session(engine) 
-
-
-# # init_db.py ###
-# engine = create_engine('sqlite:///bank.db', echo=True)
-# Session = scoped_session(sessionmaker(bind=engine))
-# Base.metadata.create_all(engine)
