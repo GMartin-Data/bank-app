@@ -27,8 +27,11 @@ class Account(Base):
     )
 
     # Methods
-    def __init__(self, balance: float = 0):
+    def __init__(self, balance: float = 0.0):
         self.balance = balance
+
+    def __repr__(self):
+        return f"Account(id={self.account_id}, balance={self.balance})"
 
 
 class Transaction(Base):
@@ -43,7 +46,7 @@ class Transaction(Base):
     # Relationships
     # Many-to-one: any transaction has only one account
     account: Mapped[int] = relationship(
-        back_populates="transaction"
+        back_populates="transactions"
     )
 
     # Methods
@@ -52,3 +55,8 @@ class Transaction(Base):
         self.amount = amount
         self.type = type
         self.timestamp = datetime.now()
+
+
+if __name__ == "__main__":
+    a = Account()
+    print(a)
