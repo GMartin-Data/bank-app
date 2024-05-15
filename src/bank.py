@@ -23,7 +23,7 @@ from db import init_db_connection
 
 # Utility functions
 def is_incorrect_amount(amount: Union[int, float]) -> bool:
-    """manage non numerical or negative amounts prompted"""
+    """Manage non numerical or negative amounts prompted."""
     # Non-numerical
     try:
         float(amount)
@@ -40,6 +40,12 @@ def is_incorrect_amount(amount: Union[int, float]) -> bool:
 
 # Main Functions
 def create_account(session: Session, amount: float = 0.0) -> str:
+    """
+    Create a bank account with an inital balance.
+    `account_id` is automatically generated (auto-incrementation) when recording in database.
+    Return value is the informative message displayed, in case of approval or cancellation.
+    The account is recorded in the database's `accounts` table.
+    """
     if is_incorrect_amount(amount):
         output = "CANCELLED CREATION: Incorrect amount prompted"
         print(output)
@@ -55,6 +61,13 @@ def create_account(session: Session, amount: float = 0.0) -> str:
 
 
 def deposit(session: Session, account_id: int, amount: float) -> str:
+    """
+    Perform a deposit on an account, with specifying:
+    - its account_id,
+    - the wanted amount.
+    Return value is the informative message displayed, in case of approval or cancellation.
+    This deposit is recorded in the database's `transactions` table.
+    """
     if is_incorrect_amount(amount):
         output =  "CANCELLED DEPOSIT: Incorrect amount prompted"
         print(output)
@@ -83,6 +96,13 @@ def deposit(session: Session, account_id: int, amount: float) -> str:
 
 
 def withdraw(session: Session, account_id: int, amount: float) -> str:
+    """
+    Perform a withdrawal on an account, with specifying:
+    - its account_id,
+    - the wanted amount.
+    Return value is the informative message displayed, in case of approval or cancellation.
+    This withdrawal is recorded in the database's `transactions` table.
+    """
     if is_incorrect_amount(amount):
         output = "CANCELLED WITHDRAWAL: Incorrect amount prompted"
         print(output)
@@ -115,6 +135,15 @@ def withdraw(session: Session, account_id: int, amount: float) -> str:
 
 
 def transfer(session: Session, account_from_id: int, account_to_id: int, amount: float) -> str:
+    """
+    Perform a transfer between two accounts, with specifying:
+    - their account_ids,
+    - the wanted amount.
+    Return value is the informative message displayed, in case of approval or cancellation.
+    This transfer is recorded TWICE in the database's `transactions` table:
+    - one withdrawal associated with the "from" account (first),
+    - one deposit associated with the "to" account (second).
+    """
     if is_incorrect_amount(amount):
         output = "CANCELLED TRANSFER: Incorrect amount prompted"
         print(output)
@@ -159,6 +188,11 @@ def transfer(session: Session, account_from_id: int, account_to_id: int, amount:
 
 
 def get_balance(session: Session, account_id: int) -> str:
+    """
+    Display the current balance of an account,
+    with specifying its id.
+    Return value is the informative message displayed, in case of approval or cancellation.
+    """
     with session:
         try:
             account = (session
