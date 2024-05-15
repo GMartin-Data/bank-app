@@ -11,7 +11,6 @@ This invoves two mandatory classes:
 - Transaction
 """
 
-from datetime import datetime
 from typing import Union
 
 from sqlalchemy.exc import NoResultFound
