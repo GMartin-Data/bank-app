@@ -35,10 +35,15 @@ def is_incorrect_amount(amount):
 
 # Main Functions
 def create_account(session: Session, amount: float = 0.0) -> None:
+    if is_incorrect_amount(amount):
+        return "CANCELLED CREATION: Incorrect amount prompted"
     new_account = Account(balance=amount)
     with session:
         session.add(new_account)
         session.commit()
+        output = f"APPROVED CREATION of account {new_account.account_id} with an initial balance of {new_account.balance}"
+        print(output)
+        return output
 
 
 def deposit(session: Session, account_id: int, amount: float) -> None:
@@ -56,10 +61,10 @@ def deposit(session: Session, account_id: int, amount: float) -> None:
             approved = Transaction(account_id, amount, "deposit")
             session.add(approved)
             session.commit()
-            print(f"==> TRANSACTION {approved.transaction_id} APPROVED!")
+            print(f"APPROVED DEPOSIT - REF: {approved.transaction_id}")
             
         except NoResultFound:
-            print(f"/!\ TRANSACTION CANCELLED: There's no account with id {account_id}")
+            print(f"CANCELLED DEPOSIT: There's no account with id {account_id}")
 
 
 def withdraw(session: Session, account_id: int, amount: float) -> str:
@@ -144,7 +149,8 @@ def get_balance(session: Session, account_id: int) -> bool:
 
 if __name__ == "__main__":
     engine, session = init_db_connection()
-    withdraw(session, 1, 100)
-    print("#" * 150)
-    withdraw(session, 1, 500)
+    deposit(session, 1, -100)
+    deposit(session, 1, "BOUH")
+    deposit(session, 42, 1_000)
+    deposit(session, 1, 400)
     engine.dispose()
