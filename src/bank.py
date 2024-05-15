@@ -44,7 +44,8 @@ def create_account(session: Session, amount: float = 0.0) -> str:
     with session:
         session.add(new_account)
         session.commit()
-        output = f"APPROVED CREATION of account {new_account.account_id} with an initial balance of {new_account.balance:.2f}"
+        output = f"APPROVED CREATION of account {new_account.account_id}" + \
+            f" with an initial balance of {new_account.balance:.2f}"
         print(output)
         return output
 
@@ -171,11 +172,11 @@ def get_balance(session: Session, account_id: int) -> str:
 if __name__ == "__main__":
     engine, session = init_db_connection()
     # create_account(session, -3_000)
-    # create_account(session, 200)
+    create_account(session, 200)
     # deposit(session, 1, -100)
     # deposit(session, 1, "BOUH")
     # deposit(session, 42, 1_000)
-    deposit(session, 2, 1_000)
+    # deposit(session, 2, 1_000)
     # deposit(session, 1, 400)
     # withdraw(session, 42, -100)
     # withdraw(session, 1, "BOUH")
