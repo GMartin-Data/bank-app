@@ -139,24 +139,29 @@ def transfer(session: Session,
                     print(f"==> TRANSACTIONS {approved_from.transaction_id} and {approved_to.transaction_id} APPROVED!")
 
 
-def get_balance(session: Session, account_id: int) -> bool:
+def get_balance(session: Session, account_id: int) -> str:
     with session:
         try:
             account = (session
                        .query(Account)
                        .filter(Account.account_id == account_id)
                        .one())
-            print(f"Account {account.account_id} has a balance of {account.balance}")
+            output = f"INFO: Account {account.account_id} has a balance of {account.balance}"
+            print(output)
+            return output
         except NoResultFound:
-            print(f"/!\ TRANSACTION CANCELLED: There's no account with id {account_id}")
+            print(f"CANCELLED INFO: There's no account with id {account_id}")
     
 
 
 if __name__ == "__main__":
     engine, session = init_db_connection()
     create_account(session, -3_000)
+    create_account(session, 200)
     deposit(session, 1, -100)
     deposit(session, 1, "BOUH")
     deposit(session, 42, 1_000)
     deposit(session, 1, 400)
+    get_balance(session, 8)
+    get_balance(session, 1)
     engine.dispose()
