@@ -23,14 +23,18 @@ from db import init_db_connection
 
 # Utility functions
 def is_incorrect_amount(amount: Union[int, float]) -> bool:
+    """manage non numerical or negative amounts prompted"""
+    # Non-numerical
     try:
         float(amount)
     except ValueError:
         print(f"INCORRECT AMOUNT: Expected a numerical amount, got {amount}")
         return True
+    # Negative
     if amount < 0:
         print(f"INCORRECT AMOUNT: Expected a positive amount, got {amount}")
         return True
+    # Finally, normal case
     return False
     
 
