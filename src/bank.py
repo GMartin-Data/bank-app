@@ -23,7 +23,7 @@ from db import init_db_connection
 
 # Utility functions
 def is_incorrect_amount(amount: Union[int, float]) -> bool:
-    """Manage non numerical or negative amounts prompted."""
+    """Utility function to manage non numerical or negative amounts prompted."""
     # Non-numerical
     try:
         float(amount)
@@ -41,7 +41,7 @@ def is_incorrect_amount(amount: Union[int, float]) -> bool:
 # Main Functions
 def create_account(session: Session, amount: float = 0.0) -> str:
     """
-    Create a bank account with an inital balance.
+    Create a bank account with specifying an inital balance (default is 0.0).
     `account_id` is automatically generated (auto-incrementation) when recording in database.
     Return value is the informative message displayed, in case of approval or cancellation.
     The account is recorded in the database's `accounts` table.
