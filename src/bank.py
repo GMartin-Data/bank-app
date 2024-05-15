@@ -104,29 +104,35 @@ def withdraw(session: Session, account_id: int, amount: float) -> str:
             return output
 
 
-def transfer(session: Session,
-             account_from_id: int, account_to_id: int,
-             amount: float) -> None:
+def transfer(session: Session, account_from_id: int, account_to_id: int, amount: float) -> str:
     if is_incorrect_amount(amount):
-        return None
+        output = "CANCELLED TRANSFER: Incorrect amount prompted"
+        print(output)
+        return output
     with session:
         acc_from = (session
                          .query(Account)
                          .filter(Account.account_id == account_from_id)
                          .all())
         if not acc_from:
-            print(f"/!\ TRANSACTION CANCELLED: There's no account with id {account_from_id}")
+            output = f"CANCELLED TRANSFER: There's no account with id {account_from_id}"
+            print(output)
+            return output
         else:
             acc_from = acc_from[0]
             if acc_from.balance < amount:
-                print(f"/!\ TRANSACTION CANCELLED: Insufficient funds on account {account_from_id}")
+                output = f"CANCELLED TRANSFER: Insufficient funds on account {account_from_id}"
+                print(output)
+                return output
             else:
                 acc_to = (session
                           .query(Account)
-                          .filter(Account.account_id == account_from_id)
+                          .filter(Account.account_id == account_to_id)
                           .all())
                 if not acc_to:
-                    print(f"/!\ TRANSACTION CANCELLED: There's no account with id {account_to_id}")
+                    output = f"CANCELLED TRANSFER: There's no account with id {account_from_id}"
+                    print(output)
+                    return output
                 else:
                     acc_to = acc_to[0]
                     acc_to.balance += amount
@@ -135,8 +141,6 @@ def transfer(session: Session,
                     approved_from = Transaction(account_from_id, amount, "withdraw")
                     approved_to = Transaction(account_to_id, amount, "deposit")
                     session.add_all([approved_from, approved_to])
-                    get_balance(session, account_from_id)
-                    get_balance(session, account_to_id)
                     session.commit()
                     print(f"==> TRANSACTIONS {approved_from.transaction_id} and {approved_to.transaction_id} APPROVED!")
 
@@ -164,10 +168,15 @@ if __name__ == "__main__":
     # deposit(session, 1, "BOUH")
     # deposit(session, 42, 1_000)
     # deposit(session, 1, 400)
-    withdraw(session, 42, -100)
-    withdraw(session, 1, "BOUH")
-    withdraw(session, 42, 1_000)
-    withdraw(session, 1, 300)
-    get_balance(session, 42)
-    get_balance(session, 1)
+    # withdraw(session, 42, -100)
+    # withdraw(session, 1, "BOUH")
+    # withdraw(session, 42, 1_000)
+    # withdraw(session, 1, 300)
+    transfer(session, 1, 2, -100)
+    transfer(session, 1, 2, "BOUH")
+    transfer(session, 42, 1, 100)
+    transfer(session, 1, 42, 100)
+    # get_balance(session, 42)
+    # get_balance(session, 1)
+    # get_balance(session, 2)
     engine.dispose()
