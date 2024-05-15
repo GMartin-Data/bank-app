@@ -66,10 +66,15 @@ def deposit(session: Session, account_id: int, amount: float) -> str:
             approved = Transaction(account_id, amount, "deposit")
             session.add(approved)
             session.commit()
-            print(f"APPROVED DEPOSIT of {amount:.2f} on account {account_id} - REF: {approved.transaction_id}")
+            output = f"APPROVED DEPOSIT of {amount:.2f} on account {account_id}" +\
+                f" - REF: {approved.transaction_id}"
+            print(output)
+            return output
             
         except NoResultFound:
-            print(f"CANCELLED DEPOSIT: There's no account with id {account_id}")
+            output = f"CANCELLED DEPOSIT: There's no account with id {account_id}"
+            print(output)
+            return output
 
 
 def withdraw(session: Session, account_id: int, amount: float) -> str:
@@ -170,6 +175,7 @@ if __name__ == "__main__":
     # deposit(session, 1, -100)
     # deposit(session, 1, "BOUH")
     # deposit(session, 42, 1_000)
+    deposit(session, 2, 1_000)
     # deposit(session, 1, 400)
     # withdraw(session, 42, -100)
     # withdraw(session, 1, "BOUH")
