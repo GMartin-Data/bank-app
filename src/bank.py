@@ -142,7 +142,10 @@ def transfer(session: Session, account_from_id: int, account_to_id: int, amount:
                     approved_to = Transaction(account_to_id, amount, "deposit")
                     session.add_all([approved_from, approved_to])
                     session.commit()
-                    print(f"==> TRANSACTIONS {approved_from.transaction_id} and {approved_to.transaction_id} APPROVED!")
+                    output = f"APPROVED TRANSFER of {amount:.2f} from account {account_from_id} to account {account_to_id}" +\
+                    f" - REFS: {approved_from.transaction_id} and {approved_to.transaction_id}"
+                    print(output)
+                    return output
 
 
 def get_balance(session: Session, account_id: int) -> str:
@@ -176,6 +179,7 @@ if __name__ == "__main__":
     transfer(session, 1, 2, "BOUH")
     transfer(session, 42, 1, 100)
     transfer(session, 1, 42, 100)
+    transfer(session, 1, 3, 500)
     # get_balance(session, 42)
     # get_balance(session, 1)
     # get_balance(session, 2)
