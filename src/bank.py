@@ -12,6 +12,7 @@ This invoves two mandatory classes:
 """
 
 from datetime import datetime
+from typing import Union
 
 from sqlalchemy.exc import NoResultFound
 from sqlalchemy.orm import Session
@@ -21,22 +22,24 @@ from db import init_db_connection
 
 
 # Utility functions
-def is_incorrect_amount(amount):
+def is_incorrect_amount(amount: Union[int, float]) -> bool:
     try:
         float(amount)
     except ValueError:
-        print(f"TRANSACTION CANCELLED: Expected a numerical amount, got {amount}")
+        print(f"INCORRECT AMOUNT: Expected a numerical amount, got {amount}")
         return True
     if amount < 0:
-        print(f"TRANSACTION CANCELLED: Expected a positive amount, got {amount}")
+        print(f"INCORRECT AMOUNT: Expected a positive amount, got {amount}")
         return True
     return False
     
 
 # Main Functions
-def create_account(session: Session, amount: float = 0.0) -> None:
+def create_account(session: Session, amount: float = 0.0) -> str:
     if is_incorrect_amount(amount):
-        return "CANCELLED CREATION: Incorrect amount prompted"
+        output = "CANCELLED CREATION: Incorrect amount prompted"
+        print(output)
+        return output
     new_account = Account(balance=amount)
     with session:
         session.add(new_account)
@@ -46,9 +49,11 @@ def create_account(session: Session, amount: float = 0.0) -> None:
         return output
 
 
-def deposit(session: Session, account_id: int, amount: float) -> None:
+def deposit(session: Session, account_id: int, amount: float) -> str:
     if is_incorrect_amount(amount):
-        return  None
+        output =  "CANCELLED DEPOSIT: Incorrect amount prompted"
+        print(output)
+        return output
     with session:
         try:
             account = (session
@@ -149,6 +154,7 @@ def get_balance(session: Session, account_id: int) -> bool:
 
 if __name__ == "__main__":
     engine, session = init_db_connection()
+    create_account(session, -3_000)
     deposit(session, 1, -100)
     deposit(session, 1, "BOUH")
     deposit(session, 42, 1_000)
